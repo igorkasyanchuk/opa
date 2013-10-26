@@ -1,0 +1,7 @@
+tmp/pid/*
+tmp/*.pid
+tmp/pids
+tmp/pids/*
+log/*.log
+.sass-cache
+.sass-cache/*
