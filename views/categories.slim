@@ -1,0 +1,19 @@
+div data-role="page" id='main'
+  div data-role="header"
+    a href="/" data-icon="back" назад
+    h1
+    a href="#search" data-icon="search" пошук
+
+  div data-role="content"
+    h1 Усі категорії
+
+
+    ul data-role="listview" data-autodividers="true" data-filter="true" data-inset="true"
+      - Category.by_name.valid.each do |category|
+        li
+          a href="/categories/#{category.to_param}" = category.name
+
+
+  div data-role="footer"
+    h6 Твоє місто завжди поруч
+

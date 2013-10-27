@@ -1,19 +1,13 @@
 div data-role="page" id='main'
   div data-role="header"
-    h1 Твоє місто
+    a href="javascript:$.mobile.changePage('/');" data-icon="back" назад
+    h1
+    a href="#search" data-icon="search" пошук
 
   div data-role="content"
-    form action='/search' method='get'
-      label for="q" Що шукаємо?
-      input#text-basic name="q" type="text" value="" autofocus=''
-
-      input data-icon="search" data-theme="b" type="submit" value="Пошук"
-      a href='/categories' data-role="button" data-icon="bars" style='font-size: 10px !important;' Пошук по категорії
-    br
-
-    | Останні відвідані
+    | Результати пошуку
     ul data-autodividers="false" data-filter="false" data-inset="true" data-role="listview"
-      - Business.random.limit(10).each do |business|
+      - @businesses.each do |business|
         li
           - address = business.phones_addresses.first
           a href="/ivano-frankivsk/#{business.to_param}"
@@ -22,6 +16,7 @@ div data-role="page" id='main'
             span.phone= address.try :phone
             br
             address= address.try :address
+
 
 
   div data-role="footer"
