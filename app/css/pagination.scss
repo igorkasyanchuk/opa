@@ -1,0 +1,12 @@
+.pagination {
+  padding: 10px 0;
+  text-align: center;
+  .previous_page, .next_page  {
+    display: none;
+  }
+  a, span {
+    padding: 2px 2px;
+    font-size: 18px;
+    font-style: normal;
+  }
+}

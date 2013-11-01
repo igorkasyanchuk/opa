@@ -3,3 +3,6 @@ database: jq
 username: root
 password:
 host: localhost 
+encoding: utf8
+reconnect: true
+pool: 10

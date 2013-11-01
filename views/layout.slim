@@ -11,19 +11,3 @@ html
 
   body
     == yield
-
-    div data-role='search' id='search'
-      div data-role="header"
-        a href="#main" data-icon="back" назад
-        h1
-
-      div data-role="content"
-        form action='/search' method='get'
-          label for="q" Що шукаємо?
-          input#text-basic name="q" type="text" value="" autofocus=''
-
-          input data-icon="search" data-theme="b" type="submit" value="Пошук"
-          a href='/categories' data-role="button" data-icon="bars" style='font-size: 10px !important;' Пошук по категорії
-
-      div data-role="footer"
-        h6 ... завжди поруч

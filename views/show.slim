@@ -3,16 +3,16 @@
 
 div data-role="page" id='main'
   div data-role="header"
-    a href="javascript:$.mobile.changePage('/');" data-icon="back" назад
+    a href="javascript: window.history.back();" data-icon="back" назад
     h1
-    a href="#search" data-icon="search" пошук
+    a href="/" data-icon="search" пошук
 
   div data-role="content"
     h1 = @business.name
 
     .addresses
       strong Івано-Франківськ
-      ul data-inset="true" data-role="listview"
+      ul.bs data-inset="true" data-role="listview"
         li data-role="list-divider"
           - if @business.phones_addresses.count > 1
             | Адреси
@@ -34,8 +34,7 @@ div data-role="page" id='main'
       .schedule
         p
           strong Розклад роботи
-        == @business.schedule.gsub("<table", '<table data-role="table" class="ui-shadow table-stripe ui-responsive"').sub("<tr", '<tr class="ui-bar-d"')
-
+        == @business.format_schedule
 
     .categories
       - @business.categories.by_name.each do |category|

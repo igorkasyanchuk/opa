@@ -13,6 +13,7 @@ gem 'sinatra-activerecord'
 gem 'mysql2',          '0.3.13'
 gem 'thinking-sphinx', '~> 3.0.6', :require => 'thinking_sphinx/sinatra'
 gem 'rake'
+gem 'will_paginate', '~> 3.0'
 
 group :development do
   gem 'tux'

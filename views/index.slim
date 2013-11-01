@@ -5,15 +5,15 @@ div data-role="page" id='main'
   div data-role="content"
     form action='/search' method='get'
       label for="q" Що шукаємо?
-      input#text-basic name="q" type="text" value="" autofocus=''
+      input#text-basic name="q" type="text" value="#{params['q']}" autofocus=''
 
       input data-icon="search" data-theme="b" type="submit" value="Пошук"
       a href='/categories' data-role="button" data-icon="bars" style='font-size: 10px !important;' Пошук по категорії
     br
 
     | Останні відвідані
-    ul data-autodividers="false" data-filter="false" data-inset="true" data-role="listview"
-      - Business.random.limit(10).each do |business|
+    ul.bss data-autodividers="false" data-filter="false" data-inset="true" data-role="listview"
+      - @businesses.each do |business|
         li
           - address = business.phones_addresses.first
           a href="/ivano-frankivsk/#{business.to_param}"

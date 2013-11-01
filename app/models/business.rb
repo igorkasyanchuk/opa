@@ -1,3 +1,5 @@
+#encoding: utf-8
+
 class Business < ActiveRecord::Base
   belongs_to :city
 
@@ -10,7 +12,7 @@ class Business < ActiveRecord::Base
   scope :random, order("rand()")
 
   def to_param
-    "#{id}-#{name}".downcase
+    "#{id}-#{name}".mb_chars.downcase.gsub(/[^a-z0-9а-яії]+/i, '-')
   end
 
   def title
@@ -19,6 +21,10 @@ class Business < ActiveRecord::Base
 
   def description
     name
+  end
+
+  def format_schedule
+    self.schedule.gsub("<table", '<table data-role="table" class="ui-shadow table-stripe ui-responsive"').sub("<tr", '<tr class="ui-bar-d"')
   end
 
 end

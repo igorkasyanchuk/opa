@@ -1,25 +1,34 @@
 div data-role="page" id='main'
   div data-role="header"
-    a href="javascript:$.mobile.changePage('/');" data-icon="back" назад
+    a href="/" data-icon="back" назад
     h1
-    a href="#search" data-icon="search" пошук
+    a href="#{new_path(params['q'])}" data-icon="search" rel='nofollow' пошук
 
   div data-role="content"
-    | Результати пошуку
-    ul data-autodividers="false" data-filter="false" data-inset="true" data-role="listview"
-      - @businesses.each do |business|
-        li
-          - address = business.phones_addresses.first
-          a href="/ivano-frankivsk/#{business.to_param}"
-            = business.name
-            br
-            span.phone= address.try :phone
-            br
-            address= address.try :address
+    h4 Результати пошуку "#{params['q']}"
 
+    - if @businesses.any?
+      == page_entries_info @businesses
 
+      ul.bs data-autodividers="false" data-filter="false" data-inset="true" data-role="listview"
+        - @businesses.each do |business|
+          li
+            - address = business.phones_addresses.first
+            a href="/ivano-frankivsk/#{business.to_param}"
+              = business.name
+              - unless address.phone.strip.blank?
+                br
+                span.phone= address.phone
+              - unless address.address.strip.blank?
+                br
+                address= address.address
+
+      == will_paginate @businesses, :inner_window => 1
+
+    - else
+      p Нічого не знайдено. Спробуйте уточнити #{'<a href="/new">пошук</new>'}.
 
   div data-role="footer"
     h6 ... завжди поруч
 
-- title "Hello World !!!"
+- title "Результати пошуку"

@@ -2,6 +2,9 @@ require 'sinatra/base'
 require 'sinatra/assetpack'
 require "sinatra/content_for"
 require "sinatra/activerecord"
+require 'will_paginate'
+require 'will_paginate/active_record'
+require 'will_paginate/view_helpers/sinatra'
 
 Dir["./app/models/**/*.rb"].each { |file| require file }
 Dir["./app/indicies/**/*.rb"].each { |file| require file }
@@ -11,11 +14,12 @@ class OpaApp < Sinatra::Base
   register Sinatra::AssetPack
 
   helpers Sinatra::ContentFor
+  helpers WillPaginate::Sinatra::Helpers
 
   DB_CONFIG = YAML::load(File.open('config/database.yml'))
+  ActiveRecord::Base.establish_connection(DB_CONFIG)
 
   set :root, File.dirname(__FILE__)
-  set :database, "mysql2://#{DB_CONFIG['username']}:#{DB_CONFIG['password']}@#{DB_CONFIG['host']}:#{DB_CONFIG['port']}/#{DB_CONFIG['database']}"
 
   enable :sessions
   enable :logging
@@ -57,12 +61,17 @@ class OpaApp < Sinatra::Base
       content_for :description do
         str
       end
-    end    
+    end
+
+    def new_path(query = '')
+      ["/new", query.strip].reject{|e| e.blank?}.join("?q=")
+    end
   end
 
   run! if app_file == $0
 
   get '/' do
+    @businesses = Business.random.limit(10).includes(:phones_addresses)
     slim :index
   end
 
@@ -84,8 +93,12 @@ class OpaApp < Sinatra::Base
   end
 
   get '/search' do
-    @businesses = Business.search(params[:q], :per_page => 20, :page => params[:page])
+    @businesses = Business.search(params[:q], :per_page => 10, :page => params[:page], :includes => :phones_addresses)
     slim :search
+  end
+
+  get '/new' do
+    slim :new
   end
 
 end
