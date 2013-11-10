@@ -4,9 +4,12 @@
   .previous_page, .next_page  {
     display: none;
   }
-  a, span {
+  a, span, em {
     padding: 2px 2px;
     font-size: 18px;
     font-style: normal;
+  }
+  em {
+    font-weight: bold;
   }
 }

@@ -5,9 +5,14 @@ require "sinatra/activerecord"
 require 'will_paginate'
 require 'will_paginate/active_record'
 require 'will_paginate/view_helpers/sinatra'
+require 'logger'
 
 Dir["./app/models/**/*.rb"].each { |file| require file }
 Dir["./app/indicies/**/*.rb"].each { |file| require file }
+
+Dir["./config/initializers/*.rb"].each { |file| require file }\
+
+Dir.mkdir('logs') unless File.exist?('logs')
 
 class OpaApp < Sinatra::Base
   register Sinatra::ActiveRecordExtension
@@ -18,6 +23,16 @@ class OpaApp < Sinatra::Base
 
   DB_CONFIG = YAML::load(File.open('config/database.yml'))
   ActiveRecord::Base.establish_connection(DB_CONFIG)
+
+  configure :production do
+    $logger = Logger.new('logs/server.log', 'weekly')
+    $logger.level = Logger::DEBUG
+  end
+
+  configure :development, :test do
+    $logger = Logger.new(STDOUT)
+    $logger.level = Logger::DEBUG
+  end
 
   set :root, File.dirname(__FILE__)
 
@@ -44,9 +59,13 @@ class OpaApp < Sinatra::Base
 
     js_compression  :jsmin   # :jsmin | :yui | :closure | :uglify
     css_compression :simple   # :simple | :sass | :yui | :sqwish
-  }  
+  }
 
   helpers do
+    def logger
+      $logger
+    end
+
     def h(text)
       Rack::Utils.escape_html(text)
     end
@@ -63,12 +82,24 @@ class OpaApp < Sinatra::Base
       end
     end
 
-    def new_path(query = '')
-      ["/new", query.strip].reject{|e| e.blank?}.join("?q=")
+    def query_param
+      params[:q] || params[:keyword] || params[:category] || ''
+    end
+
+    def new_path
+      ["/new", query_param.strip].reject{|e| e.blank?}.join("?q=")
+    end
+
+    def search(query)
+      Business.search(query, :per_page => 10, :page => params[:page], :includes => :phones_addresses)
     end
   end
 
   run! if app_file == $0
+
+  before do
+    #logger.info "#{params.inspect}".red
+  end
 
   get '/' do
     @businesses = Business.random.limit(10).includes(:phones_addresses)
@@ -81,7 +112,8 @@ class OpaApp < Sinatra::Base
   end
 
   get '/keywords/:keyword' do
-    params[:keyword]
+    @businesses = search(params[:keyword])
+    slim :search
   end
 
   get '/categories' do
@@ -89,11 +121,12 @@ class OpaApp < Sinatra::Base
   end
 
   get '/categories/:category' do
-    params[:category]
+    @businesses = search(params[:category])
+    slim :search
   end
 
   get '/search' do
-    @businesses = Business.search(params[:q], :per_page => 10, :page => params[:page], :includes => :phones_addresses)
+    @businesses = search(params[:q])
     slim :search
   end
 

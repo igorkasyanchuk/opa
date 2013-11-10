@@ -20,4 +20,7 @@ require "sinatra/activerecord/rake"
 
 require 'rake'
 
+DB_CONFIG = YAML::load(File.open('config/database.yml'))
+ActiveRecord::Base.establish_connection(DB_CONFIG)
+
 load File.join(File.dirname(__FILE__), 'tasks', 'sphinx.rake')

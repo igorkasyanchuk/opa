@@ -2,7 +2,8 @@ adapter: mysql2
 database: jq
 username: root
 password:
-host: localhost 
+host: localhost
 encoding: utf8
 reconnect: true
 pool: 10
+#password 123456aa

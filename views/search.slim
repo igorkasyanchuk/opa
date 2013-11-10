@@ -2,10 +2,10 @@ div data-role="page" id='main'
   div data-role="header"
     a href="/" data-icon="back" назад
     h1
-    a href="#{new_path(params['q'])}" data-icon="search" rel='nofollow' пошук
+    a href="#{new_path}" data-icon="search" rel='nofollow' пошук
 
   div data-role="content"
-    h4 Результати пошуку "#{params['q']}"
+    h4 Результати пошуку "#{query_param}"
 
     - if @businesses.any?
       == page_entries_info @businesses

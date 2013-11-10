@@ -1,9 +1,9 @@
 production:
   mysql41: 9312
-  bin_path: '/usr/bin'
-  log: "log/searchd.log"
-  query_log: "log/searchd.query.log"
-  pid_file: "log/searchd.pid"
+  #bin_path: '/usr/bin'
+  log: "logs/searchd.log"
+  query_log: "logs/searchd.query.log"
+  pid_file: "logs/searchd.pid"
   mem_limit: 64M
   morphology: stem_enru
   enable_star: true
